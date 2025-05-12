@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Proxy Authentication</title>
+    <script src="js/popup.js"></script>
+    <style>
+      h2{color:forestgreen}
+    </style>
+</head>
+<body>
+<h2>设置代理账密</h2>
+<div id="form">
+  <div>
+    <label for="username">用户名:</label>
+    <input type="text" id="username" placeholder="输入用户名">
+  </div>
+  <div>
+    <label for="password">密码:</label>
+    <input type="password" id="password" placeholder="输入密码">
+  </div>
+  <button id="save">保存</button>
+</div>
+<div id="saved-info">
+  <h3>当前保存的账密:</h3>
+  <div id="content">
+    <p>未设置</p>
+    <p>未设置</p>
+  </div>
+</div>
+<div id="message" style="color:green;display:none;">保存成功!</div>
+
+<style>
+  #form div {
+    margin-bottom: 10px;
+  }
+  label {
+    display: inline-block;
+    width: 60px;
+  }
+  input {
+    width: 150px;
+  }
+  button {
+    margin-top: 10px;
+    padding: 5px 15px;
+  }
+</style>
+</body>
+</html>
