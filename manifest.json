@@ -5,7 +5,8 @@
   "permissions":[
     "webRequest",
     "webRequestAuthProvider",
-    "storage"
+    "storage",
+    "proxy"
   ],
   "host_permissions": [
     "<all_urls>"

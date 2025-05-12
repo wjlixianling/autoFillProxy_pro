@@ -14,8 +14,22 @@
 </head>
 
 <body>
-  <h2>设置代理账密</h2>
-  <div id="form">
+  <h2>代理设置</h2>
+  <div class="setting-section">
+    <h3>代理服务器</h3>
+    <div  id="form"> 
+      <label for="proxyAddress">代理地址:</label>
+      <input type="text" id="proxyAddress" placeholder="ip:端口">
+    </div>
+    <div>
+      <button id="enableProxy">启用代理</button>
+      <button id="disableProxy" style="margin-left:10px;">禁用代理</button>
+    </div>
+  </div>
+
+  <div class="setting-section">
+    <h3>代理账密</h3>
+    <div id="form">
     <div>
       <label for="username">用户名:</label>
       <input type="text" id="username" placeholder="输入用户名">
@@ -48,8 +62,9 @@
     }
 
     #form div {
-      margin-bottom: 12px;
+      margin-bottom: 14px;
     }
+
 
     label {
       display: inline-block;
