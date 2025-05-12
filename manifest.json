@@ -15,7 +15,7 @@
     "default_icon": {              
       "16": "images/icon16.png"
     },
-	"default_title": "自动处理身份验证",
+	"default_title": "设置身份验证，避免弹框输入",
 	"default_popup": "popup.html"
   },
   "manifest_version": 3

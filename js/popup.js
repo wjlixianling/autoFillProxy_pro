@@ -14,6 +14,26 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
+  // 清除账密
+  document.getElementById('clear').addEventListener('click', function() {
+    if (!confirm('确定要清除已保存的代理认证信息吗？')) {
+      return;
+    }
+    
+    chrome.storage.local.remove(['proxyAuth'], function() {
+      const pElements = contentDiv.getElementsByTagName('p');
+      pElements[0].textContent = '未设置';
+      pElements[1].textContent = '未设置';
+      
+      messageDiv.textContent = '清除成功!';
+      messageDiv.style.color = 'green';
+      messageDiv.style.display = 'block';
+      setTimeout(() => {
+        messageDiv.style.display = 'none';
+      }, 2000);
+    });
+  });
+
   // 保存账密
   saveBtn.addEventListener('click', function() {
     const username = usernameInput.value.trim();
