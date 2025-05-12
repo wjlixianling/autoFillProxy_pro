@@ -17,19 +17,19 @@
   <h2>代理设置</h2>
   <div class="setting-section">
     <h3>代理服务器</h3>
-    <div  id="form"> 
-      <label for="proxyAddress">代理地址:</label>
-      <input type="text" id="proxyAddress" placeholder="ip:端口">
-    </div>
-    <div>
-      <button id="enableProxy">启用代理</button>
-      <button id="disableProxy" style="margin-left:10px;">禁用代理</button>
+     <div id="form" class="form-container"> 
+      <div>
+        <label for="proxyAddress">代理地址:</label>
+        <input type="text" id="proxyAddress" placeholder="ip:端口">
+      </div>
+      <button id="enableProxy">启用</button>
+      <button id="disableProxy" style="margin-left:10px;">禁用</button>
     </div>
   </div>
 
-  <div class="setting-section">
+  <div class="setting-section"> 
     <h3>代理账密</h3>
-    <div id="form">
+    <div id="form" class="form-container">
     <div>
       <label for="username">用户名:</label>
       <input type="text" id="username" placeholder="输入用户名">
@@ -38,13 +38,12 @@
       <label for="password">密码:</label>
       <input type="password" id="password" placeholder="输入密码">
     </div>
-    <div class="btn-group"></div>
-    <button id="save">保存账密</button>
-    <button id="clear" style="margin-left:10px;">清除已保存</button>
+    <button id="save">保存</button>
+    <button id="clear" style="margin-left:10px;">重置</button>
   </div>
   </div>
   <div id="saved-info">
-    <h3>当前保存的账密:</h3>
+    <h3>已启用信息:</h3>
     <div id="content">
       <p>未设置</p>
       <p>未设置</p>
@@ -61,8 +60,17 @@
       font-family: 'Segoe UI', sans-serif;
     }
 
+  .form-container {
+  padding: 16px;
+  background: #dddcdc;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  margin-bottom: 12px;
+  }
+
+
     #form div {
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
 
 
@@ -75,13 +83,6 @@
       width: 150px;
     }
 
-    /* 按钮容器布局 */
-    .btn-group {
-      display: flex;
-      gap: 10px;
-      /* 按钮间距 */
-      justify-content: space-between;
-    }
 
     /* 按钮通用样式 */
     button {
@@ -99,7 +100,7 @@
 
     /* 悬停效果 */
     button:hover {
-      background: #106ebe;
+      background: #efc315;
     }
 
     /* 激活状态 */

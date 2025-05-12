@@ -147,8 +147,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }, function() {
       // 更新显示
       const pElements = contentDiv.getElementsByTagName('p');
-      pElements[0].textContent = username;
-      pElements[1].textContent = '******';
+      pElements[0].textContent = "用户名：" + username;
+      pElements[1].textContent = "密码：" + '******';
       
       // 显示保存成功消息
       messageDiv.style.display = 'block';
