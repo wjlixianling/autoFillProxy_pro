@@ -42,11 +42,18 @@
     <button id="clear" style="margin-left:10px;">重置</button>
   </div>
   </div>
-  <div id="saved-info">
-    <h3>已启用信息:</h3>
-    <div id="content">
-      <p>未设置</p>
-      <p>未设置</p>
+  <div id="proxy-info">
+    <h3>启用状态:</h3>
+    <div id="proxy-content">
+      <p>代理IP：未设置</p>
+      <p>状态：未启用</p>
+    </div>
+  </div>
+  
+  <div id="auth-info">
+    <div id="auth-content">
+      <p>用户名：未设置</p>
+      <p>密码：未设置</p>
     </div>
   </div>
   <div id="message" style="color:green;display:none;">保存成功!</div>
@@ -54,14 +61,24 @@
   <style>
     /* 弹出层基础样式 */
     html {
-      min-width: 300px;
+      min-width: 400px;
       /* 可自定义的最小宽度 */
       padding: 15px;
       font-family: 'Segoe UI', sans-serif;
     }
 
+    .status-enabled {
+      color: #28a745; /* 绿色 */
+      font-weight: bold;
+    }
+
+    .status-disabled {
+      color: #dc3545; /* 红色 */
+      font-weight: bold;
+    }
+
   .form-container {
-  padding: 16px;
+  padding: 8px;
   background: #dddcdc;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
@@ -80,7 +97,7 @@
     }
 
     input {
-      width: 150px;
+      width: 180px;
     }
 
 
@@ -88,7 +105,7 @@
     button {
       flex: 1;
       /* 等分宽度 */
-      padding: 8px 15px;
+      padding: 5px 10px;
       background: #2d96e7;
       color: white;
       border: none;

@@ -9,8 +9,32 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // 加载保存的代理设置
   chrome.storage.local.get(['proxySettings'], function(result) {
-    if (result.proxySettings && result.proxySettings.address) {
-      proxyAddressInput.value = result.proxySettings.address;
+    const proxyPElements = document.getElementById('proxy-content').getElementsByTagName('p');
+    
+    if (result.proxySettings) {
+      // 恢复代理地址输入框
+      if (result.proxySettings.address) {
+        proxyAddressInput.value = result.proxySettings.address;
+        proxyPElements[0].textContent = "代理IP：" + result.proxySettings.address;
+      } else {
+        proxyPElements[0].textContent = "代理IP：未设置";
+      }
+      
+      // 恢复状态显示
+      if (result.proxySettings.enabled) {
+        proxyPElements[1].textContent = "状态：已启用";
+        proxyPElements[1].classList.add('status-enabled');
+        proxyPElements[1].classList.remove('status-disabled');
+      } else {
+        proxyPElements[1].textContent = "状态：已禁用";
+        proxyPElements[1].classList.add('status-disabled');
+        proxyPElements[1].classList.remove('status-enabled');
+      }
+    } else {
+      // 默认状态
+      proxyPElements[0].textContent = "代理IP：未设置";
+      proxyPElements[1].textContent = "状态：未启用";
+      proxyPElements[1].classList.remove('status-enabled', 'status-disabled');
     }
   });
 
@@ -61,6 +85,13 @@ document.addEventListener('DOMContentLoaded', function() {
           console.log('Proxy settings saved to storage');
           showMessage('代理已启用', 'green');
           
+          // 更新代理状态显示
+          const proxyPElements = document.getElementById('proxy-content').getElementsByTagName('p');
+          proxyPElements[0].textContent = "代理IP：" + proxyAddress;
+          proxyPElements[1].textContent = "状态：已启用";
+          proxyPElements[1].classList.add('status-enabled');
+          proxyPElements[1].classList.remove('status-disabled');
+          
           // 验证设置是否生效
           chrome.proxy.settings.get({}, function(details) {
             console.log('Current proxy settings:', details);
@@ -80,6 +111,12 @@ document.addEventListener('DOMContentLoaded', function() {
             enabled: false
           }
         }, function() {
+          // 更新代理状态显示
+          const proxyPElements = document.getElementById('proxy-content').getElementsByTagName('p');
+          proxyPElements[0].textContent = "代理IP：未设置";
+          proxyPElements[1].textContent = "状态：已禁用";
+          proxyPElements[1].classList.add('status-disabled');
+          proxyPElements[1].classList.remove('status-enabled');
           showMessage('代理已禁用', 'green');
         });
       }
@@ -103,29 +140,43 @@ document.addEventListener('DOMContentLoaded', function() {
   // 加载已保存的账密
   chrome.storage.local.get(['proxyAuth'], function(result) {
     if (result.proxyAuth) {
-      const pElements = contentDiv.getElementsByTagName('p');
-      pElements[0].textContent = result.proxyAuth.username || '未设置';
-      pElements[1].textContent = result.proxyAuth.password ? '******' : '未设置';
+      const authPElements = document.getElementById('auth-content').getElementsByTagName('p');
+      authPElements[0].textContent = "用户名：" + (result.proxyAuth.username || '未设置');
+      authPElements[1].textContent = "密码：" + (result.proxyAuth.password ? '******' : '未设置');
     }
   });
 
   // 清除账密
   document.getElementById('clear').addEventListener('click', function() {
     if (!confirm('确定要清除已保存的代理认证信息吗？')) {
+      console.log('Credentials clear canceled by user');
       return;
     }
     
+    console.log('Clearing stored credentials...');
     chrome.storage.local.remove(['proxyAuth'], function() {
-      const pElements = contentDiv.getElementsByTagName('p');
-      pElements[0].textContent = '未设置';
-      pElements[1].textContent = '未设置';
+      console.log('Credentials cleared from storage');
       
-      messageDiv.textContent = '清除成功!';
-      messageDiv.style.color = 'green';
-      messageDiv.style.display = 'block';
-      setTimeout(() => {
-        messageDiv.style.display = 'none';
-      }, 2000);
+      // 验证清除结果
+      chrome.storage.local.get(['proxyAuth'], function(result) {
+        console.log('Storage verification after clear:', result.proxyAuth);
+        
+        const authPElements = document.getElementById('auth-content').getElementsByTagName('p');
+        if (authPElements.length >= 2) {
+          authPElements[0].textContent = "用户名：未设置";
+          authPElements[1].textContent = "密码：未设置";
+          console.log('UI reset to default state');
+        } else {
+          console.error('Failed to find auth display elements');
+        }
+        
+        messageDiv.textContent = '清除成功!';
+        messageDiv.style.color = 'green';
+        messageDiv.style.display = 'block';
+        setTimeout(() => {
+          messageDiv.style.display = 'none';
+        }, 2000);
+      });
     });
   });
 
@@ -139,26 +190,40 @@ document.addEventListener('DOMContentLoaded', function() {
       return;
     }
 
+    console.log('Saving proxy credentials to storage...');
     chrome.storage.local.set({
       proxyAuth: {
         username: username,
         password: password
       }
     }, function() {
-      // 更新显示
-      const pElements = contentDiv.getElementsByTagName('p');
-      pElements[0].textContent = "用户名：" + username;
-      pElements[1].textContent = "密码：" + '******';
+      console.log('Credentials saved successfully');
       
-      // 显示保存成功消息
-      messageDiv.style.display = 'block';
-      setTimeout(() => {
-        messageDiv.style.display = 'none';
-      }, 2000);
-      
-      // 清空输入框
-      usernameInput.value = '';
-      passwordInput.value = '';
+      // 验证存储结果
+      chrome.storage.local.get(['proxyAuth'], function(result) {
+        console.log('Retrieved saved credentials:', result.proxyAuth);
+        
+        // 更新账密显示
+        const authPElements = document.getElementById('auth-content').getElementsByTagName('p');
+        if (authPElements.length >= 2) {
+          authPElements[0].textContent = "用户名：" + username;
+          authPElements[1].textContent = "密码：******";
+          console.log('UI updated with new credentials');
+        } else {
+          console.error('Failed to find auth display elements');
+        }
+        
+        // 显示保存成功消息
+        messageDiv.textContent = '保存成功!';
+        messageDiv.style.display = 'block';
+        setTimeout(() => {
+          messageDiv.style.display = 'none';
+        }, 2000);
+        
+        // 清空输入框
+        usernameInput.value = '';
+        passwordInput.value = '';
+      });
     });
   });
 });
