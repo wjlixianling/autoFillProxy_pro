@@ -6,11 +6,19 @@
     "webRequest",
     "webRequestAuthProvider",
     "storage",
-    "proxy"
+    "proxy",
+    "declarativeNetRequest"
   ],
   "host_permissions": [
     "<all_urls>"
   ],
+  "declarative_net_request": {
+    "rule_resources": [{
+      "id": "ruleset",
+      "enabled": true,
+      "path": "rules.json"
+    }]
+  },
   "background": { "service_worker" : "background.js"},
   "action": {
     "default_icon": {              
