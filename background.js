@@ -5,64 +5,57 @@
  */
 function checkProxySettings() {
   return new Promise((resolve) => {
-    chrome.storage.local.get(['proxySettings'], function(result) {
+    chrome.storage.local.get(['proxySettings'], function (result) {
       console.log('Retrieved proxy settings from storage:', result.proxySettings);
-      
+
       if (!result.proxySettings || !result.proxySettings.enabled) {
         console.log("Proxy is not enabled");
         resolve(false);
         return;
       }
-      
+
       if (!result.proxySettings.address) {
         console.log("Proxy address not set");
         resolve(false);
         return;
       }
-      
+
       console.log("Proxy is properly configured");
       resolve(true);
     });
   });
 }
 
-/**
- * 代理认证请求处理器
- * 监听所有需要代理认证的网络请求,从本地存储获取代理凭据并自动填充
- * 
- * @param {object} details - 认证请求的详细信息
- * @returns {Promise<object>} - 返回认证结果的Promise
- * 
- * @listens chrome.webRequest.onAuthRequired
- */
+
+// 保存的凭据
+let currentCredentials = {};
+
+// 1. 初始化加载凭据
+chrome.storage.local.get(['proxyAuth'], (result) => {
+  currentCredentials = result.proxyAuth || {};
+});
+
+// 2. 监听凭据更新
+chrome.storage.onChanged.addListener((changes) => {
+  if (changes.proxyAuth) {
+    currentCredentials = changes.proxyAuth.newValue || {};
+  }
+});
+
+// 3. 认证拦截器
 chrome.webRequest.onAuthRequired.addListener(
-  function(details) {
-    return new Promise((resolve) => {
-      console.log("Handling authentication request for:", details.url);
-      
-      checkProxySettings().then((isProxyEnabled) => {
-        if (!isProxyEnabled) {
-          resolve({cancel: true});
-          return;
+  (details, callback) => {
+    if (currentCredentials.username && currentCredentials.password) {
+      callback({
+        authCredentials: {
+          username: currentCredentials.username,
+          password: currentCredentials.password
         }
-        
-        chrome.storage.local.get(['proxyAuth'], function(result) {
-          if (result.proxyAuth && result.proxyAuth.username && result.proxyAuth.password) {
-            console.log("Using proxy credentials:", result.proxyAuth.username);
-            resolve({
-              authCredentials: {
-                username: result.proxyAuth.username,
-                password: result.proxyAuth.password
-              }
-            });
-          } else {
-            console.log("No proxy credentials found");
-            resolve({cancel: true});
-          }
-        });
       });
-    });
+    } else {
+      callback({ cancel: true }); // 无有效凭据时取消请求
+    }
   },
-  {urls: ["<all_urls>"]},
-  ["blocking"]
+  { urls: ["<all_urls>"] },
+  ['asyncBlocking'] // 必须声明异步阻塞模式
 );
