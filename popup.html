@@ -14,10 +14,10 @@
 </head>
 
 <body>
-  <h2>代理设置</h2>
+  <h2>代理设置助手</h2>
   <div class="setting-section">
     <h3>代理服务器</h3>
-     <div id="form" class="form-container"> 
+    <div id="form" class="form-container">
       <div>
         <label for="proxyAddress">代理地址:</label>
         <input type="text" id="proxyAddress" placeholder="ip:端口">
@@ -28,20 +28,20 @@
     </div>
   </div>
 
-  <div class="setting-section"> 
+  <div class="setting-section">
     <h3>代理账密</h3>
     <div id="form" class="form-container">
-    <div>
-      <label for="username">用户名:</label>
-      <input type="text" id="username" placeholder="输入用户名">
+      <div>
+        <label for="username">用户名:</label>
+        <input type="text" id="username" placeholder="输入用户名">
+      </div>
+      <div>
+        <label for="password">密码:</label>
+        <input type="password" id="password" placeholder="输入密码">
+      </div>
+      <button id="save">保存</button>
+      <button id="clear" style="margin-left:10px;">清除</button>
     </div>
-    <div>
-      <label for="password">密码:</label>
-      <input type="password" id="password" placeholder="输入密码">
-    </div>
-    <button id="save">保存</button>
-    <button id="clear" style="margin-left:10px;">重置</button>
-  </div>
   </div>
   <div id="proxy-info">
     <h3>启用状态:</h3>
@@ -50,7 +50,7 @@
       <p>状态：未启用</p>
     </div>
   </div>
-  
+
   <div id="auth-info">
     <div id="auth-content">
       <p>用户名：未设置</p>
@@ -69,22 +69,24 @@
     }
 
     .status-enabled {
-      color: #28a745; /* 绿色 */
+      color: #28a745;
+      /* 绿色 */
       font-weight: bold;
     }
 
     .status-disabled {
-      color: #dc3545; /* 红色 */
+      color: #dc3545;
+      /* 红色 */
       font-weight: bold;
     }
 
-  .form-container {
-  padding: 8px;
-  background: #dddcdc;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-  margin-bottom: 12px;
-  }
+    .form-container {
+      padding: 10px;
+      background: #dddcdc;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      margin-bottom: 12px;
+    }
 
 
     #form div {
@@ -98,7 +100,7 @@
     }
 
     input {
-      width: 180px;
+      width: 200px;
     }
 
 
@@ -127,12 +129,12 @@
     }
 
     #autoProxy {
-    background-color: #525252 !important;
-    color: white !important;
-    cursor: not-allowed !important;
-    pointer-events: none !important;
-    opacity: 0.7 !important;
-  }
+      background-color: #525252 !important;
+      color: white !important;
+      cursor: not-allowed !important;
+      pointer-events: none !important;
+      opacity: 0.7 !important;
+    }
   </style>
 </body>
 
