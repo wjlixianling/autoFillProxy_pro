@@ -59,3 +59,19 @@ chrome.webRequest.onAuthRequired.addListener(
   { urls: ["<all_urls>"] },
   ['asyncBlocking'] // 必须声明异步阻塞模式
 );
+
+// 发送请求
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.type === 'GET_VERSION') {
+        fetch(request.url, {
+            credentials: 'include' // 携带cookie
+        })
+        .then(res => res.json())
+        .then(data => sendResponse({ data }))
+        .catch(error => sendResponse({ error: error.message }));
+        return true; // 保持消息通道开放
+    }
+});
+
+
+
