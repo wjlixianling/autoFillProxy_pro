@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // 账密设置相关元素
   const saveBtn = document.getElementById('save');
+  const autoProxyBtn = document.getElementById('autoProxy');
 
   // 加载保存的代理设置
   chrome.storage.local.get(['proxySettings'], function (result) {
@@ -139,7 +140,6 @@ document.addEventListener('DOMContentLoaded', function () {
   }
   const usernameInput = document.getElementById('username');
   const passwordInput = document.getElementById('password');
-  const contentDiv = document.getElementById('content');
   const messageDiv = document.getElementById('message');
 
   // 加载已保存的账密
@@ -230,5 +230,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 passwordInput.value = ''; */
       });
     });
+  });
+
+  autoProxyBtn.addEventListener('click',function(){
+      alert('想什么呢，这是能随便使用的功能么');
+      return;
   });
 });
