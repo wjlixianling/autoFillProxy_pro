@@ -43,21 +43,24 @@
       <button id="clear" style="margin-left:10px;">清除</button>
     </div>
   </div>
-  <div id="proxy-info">
-    <h3>启用状态:</h3>
-    <div id="proxy-content">
-      <p>代理IP：未设置</p>
-      <p>状态：未启用</p>
-    </div>
-  </div>
+  <h3>启用状态:</h3>
 
-  <div id="auth-info">
-    <div id="auth-content">
-      <p>用户名：未设置</p>
-      <p>密码：未设置</p>
+  <div id="form" class="form-container">
+    <div id="proxy-info">
+      <div id="proxy-content">
+        <p>代理IP：未设置</p>
+        <p>状态：未启用</p>
+      </div>
     </div>
+
+    <div id="auth-info">
+      <div id="auth-content">
+        <p>用户名：未设置</p>
+        <p>密码：未设置</p>
+      </div>
+    </div>
+    <div id="message" style="color:green;display:none;">保存成功!</div>
   </div>
-  <div id="message" style="color:green;display:none;">保存成功!</div>
 
   <style>
     /* 弹出层基础样式 */
@@ -75,15 +78,14 @@
     }
 
     .status-disabled {
-      color: #dc3545;
-      /* 红色 */
+      color: rgba(244, 64, 24, 0.675);/* 红色 */
       font-weight: bold;
     }
 
     .form-container {
       padding: 10px;
-      background: #dddcdc;
-      border-radius: 8px;
+      background: #dadada;
+      border-radius: 15px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
       margin-bottom: 12px;
     }
@@ -120,7 +122,9 @@
 
     /* 悬停效果 */
     button:hover {
-      background: #efc315;
+      background: #57d409f8;
+      transform: scale(1.05);  /* 增加5%的缩放效果 */
+      transition: all 0.2s ease; /* 添加平滑过渡动画 */
     }
 
     /* 激活状态 */
@@ -128,13 +132,13 @@
       transform: scale(0.98);
     }
 
-    #autoProxy {
+    /*     #autoProxy {
       background-color: #525252 !important;
       color: white !important;
       cursor: not-allowed !important;
       pointer-events: none !important;
       opacity: 0.7 !important;
-    }
+    } */
   </style>
 </body>
 

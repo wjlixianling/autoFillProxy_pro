@@ -1,5 +1,5 @@
 {
-  "name":"autoFillProxy",
+  "name":"代理设置助手",
   "version":"1.0",
   "description":"Extension to handle Authentication window",
   "permissions":[
@@ -7,6 +7,8 @@
     "webRequestAuthProvider",
     "storage",
     "proxy",
+    "cookies", 
+    "activeTab",
     "declarativeNetRequest"
   ],
   "host_permissions": [

@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // 账密设置相关元素
   const saveBtn = document.getElementById('save');
+  const autoProxyBtn = document.getElementById('autoProxy');
 
   // 加载保存的代理设置
   chrome.storage.local.get(['proxySettings'], function (result) {
@@ -139,7 +140,6 @@ document.addEventListener('DOMContentLoaded', function () {
   }
   const usernameInput = document.getElementById('username');
   const passwordInput = document.getElementById('password');
-  const contentDiv = document.getElementById('content');
   const messageDiv = document.getElementById('message');
 
   // 加载已保存的账密
@@ -229,6 +229,28 @@ document.addEventListener('DOMContentLoaded', function () {
         /*         usernameInput.value = '';
                 passwordInput.value = ''; */
       });
+    });
+  });
+
+  // 自动代理触发事件，请求指定域名，当失败时触发提醒
+  autoProxyBtn.addEventListener('click', function () {
+    chrome.runtime.sendMessage({
+      type: 'GET_VERSION',
+      url: 'https://dep.satp.cn/admin/ngx/web/version/getVersion'
+    }, (response) => {
+      console.log('响应信息:', JSON.stringify(response.data, null, 2));
+      if (response.error) {
+        console.error('请求失败:', response.error);
+        return;
+      }
+      // 新增状态判断逻辑
+      if (response.data && response.data.status === 0) {
+        alert('此功能不对普通用户开放');
+      } else {
+        const errorMsg = response.data ?
+          '登录DEP系统且高级用户权限才可以使用此功能' : '响应数据格式异常';
+        alert(errorMsg);
+      }
     });
   });
 });
