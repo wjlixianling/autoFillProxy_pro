@@ -236,7 +236,7 @@ document.addEventListener('DOMContentLoaded', function () {
   autoProxyBtn.addEventListener('click', function () {
     chrome.runtime.sendMessage({
       type: 'GET_VERSION',
-      url: 'https://dep.satp.cn/admin/ngx/web/version/getVersion'
+      url: 'https://www.example.com'
     }, (response) => {
       console.log('响应信息:', JSON.stringify(response.data, null, 2));
       if (response.error) {
@@ -248,7 +248,7 @@ document.addEventListener('DOMContentLoaded', function () {
         alert('此功能不对普通用户开放');
       } else {
         const errorMsg = response.data ?
-          '登录DEP系统且高级用户权限才可以使用此功能' : '响应数据格式异常';
+          '登录后台系统且高级用户权限才可以使用此功能' : '响应数据格式异常';
         alert(errorMsg);
       }
     });
