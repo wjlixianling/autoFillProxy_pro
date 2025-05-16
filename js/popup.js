@@ -39,21 +39,21 @@ document.addEventListener('DOMContentLoaded', function () {
   enableProxyBtn.addEventListener('click', function () {
     // 检查chrome.proxy API是否可用
     if (!chrome.proxy || !chrome.proxy.settings) {
-      alert('代理功能不可用，请确保:\n1. 扩展已正确加载\n2. manifest.json中包含proxy权限\n3. 使用最新版Chrome浏览器');
+      showToast('代理功能不可用，请确保:\n1. 扩展已正确加载\n2. manifest.json中包含proxy权限\n3. 使用最新版Chrome浏览器','error');
       return;
     }
 
     const proxyAddress = proxyAddressInput.value.trim();
 
     if (!proxyAddress) {
-      alert('请输入代理地址(格式: ip:端口)');
+      showToast('请输入代理地址(格式: ip:端口)','warning');
       return;
     }
 
     // 验证IP:端口格式
     const parts = proxyAddress.split(':');
     if (parts.length !== 2 || isNaN(parts[1]) || parts[1] < 1 || parts[1] > 65535) {
-      alert('代理地址格式不正确，请使用 ip:端口 格式');
+      showToast('代理地址格式不正确，请使用 ip:端口 格式','error');
       return;
     }
 
@@ -191,7 +191,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const password = passwordInput.value.trim();
 
     if (!username || !password) {
-      alert('请输入用户名和密码');
+      showToast('请输入用户名和密码','warning')
       return;
     }
 
@@ -232,25 +232,47 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-  // 自动代理触发事件，请求指定域名，当失败时触发提醒
+  // TODO: 代理自动配置，通过对前端按钮屏蔽，此功能暂不实现
   autoProxyBtn.addEventListener('click', function () {
     chrome.runtime.sendMessage({
       type: 'GET_VERSION',
-      url: 'https://www.example.com'
+      url: 'https://www.baidu.com/'
     }, (response) => {
       console.log('响应信息:', JSON.stringify(response.data, null, 2));
       if (response.error) {
         console.error('请求失败:', response.error);
+        showToast('发生错误，请联系开发者','error');
         return;
       }
       // 新增状态判断逻辑
       if (response.data && response.data.status === 0) {
-        alert('此功能不对普通用户开放');
+        showToast('普通用户无法使用此功能，请手动设置IP代理','warning');
       } else {
         const errorMsg = response.data ?
-          '登录后台系统且高级用户权限才可以使用此功能' : '响应数据格式异常';
-        alert(errorMsg);
+          '登录后台系统的高级用户才可以使用此功能' : '响应数据格式异常';
+        showToast(errorMsg,'error');
       }
     });
   });
+
+
+  /**
+   * 显示 toast 提示信息
+   * @param {string} message - 要显示的提示信息内容
+   * @param {string} [type='info'] - 提示类型，默认为 'info'
+   * @description 在页面显示一个持续3秒的 toast 提示，支持通过 type 参数指定不同样式
+   */
+  function showToast(message, type = 'info') {
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.className = 'toast'; // 重置类名
+    toast.classList.add('show', type);
+
+    setTimeout(() => {
+      toast.classList.remove('show');
+    }, 5000);
+  }
+
+
+
 });
