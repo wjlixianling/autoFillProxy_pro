@@ -39,21 +39,21 @@ document.addEventListener('DOMContentLoaded', function () {
   enableProxyBtn.addEventListener('click', function () {
     // 检查chrome.proxy API是否可用
     if (!chrome.proxy || !chrome.proxy.settings) {
-      showToast('代理功能不可用，请确保:\n1. 扩展已正确加载\n2. manifest.json中包含proxy权限\n3. 使用最新版Chrome浏览器','error');
+      showToast('代理功能不可用，请确保:\n1. 扩展已正确加载\n2. manifest.json中包含proxy权限\n3. 使用最新版Chrome浏览器', 'error');
       return;
     }
 
     const proxyAddress = proxyAddressInput.value.trim();
 
     if (!proxyAddress) {
-      showToast('请输入代理地址(格式: ip:端口)','warning');
+      showToast('请输入代理地址(格式: ip:端口)', 'warning');
       return;
     }
 
     // 验证IP:端口格式
     const parts = proxyAddress.split(':');
     if (parts.length !== 2 || isNaN(parts[1]) || parts[1] < 1 || parts[1] > 65535) {
-      showToast('代理地址格式不正确，请使用 ip:端口 格式','error');
+      showToast('代理地址格式不正确，请使用 ip:端口 格式', 'error');
       return;
     }
 
@@ -191,7 +191,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const password = passwordInput.value.trim();
 
     if (!username || !password) {
-      showToast('请输入用户名和密码','warning')
+      showToast('请输入用户名和密码', 'warning')
       return;
     }
 
@@ -232,25 +232,27 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
+
   // TODO: 代理自动配置，通过对前端按钮屏蔽，此功能暂不实现
   autoProxyBtn.addEventListener('click', function () {
     chrome.runtime.sendMessage({
       type: 'GET_VERSION',
-      url: 'https://www.baidu.com/'
+      url: 'www.example.com'
     }, (response) => {
       console.log('响应信息:', JSON.stringify(response.data, null, 2));
       if (response.error) {
         console.error('请求失败:', response.error);
-        showToast('发生错误，请联系开发者','error');
+        showToast('发生错误，请联系开发者', 'error');
         return;
       }
       // 新增状态判断逻辑
       if (response.data && response.data.status === 0) {
-        showToast('普通用户无法使用此功能，请手动设置IP代理','warning');
+        //showToast('普通用户无法使用此功能，请手动设置IP代理', 'warning');
+        saveProxyCredentials();
       } else {
         const errorMsg = response.data ?
           '登录后台系统的高级用户才可以使用此功能' : '响应数据格式异常';
-        showToast(errorMsg,'error');
+        showToast(errorMsg, 'error');
       }
     });
   });
@@ -271,6 +273,61 @@ document.addEventListener('DOMContentLoaded', function () {
     setTimeout(() => {
       toast.classList.remove('show');
     }, 5000);
+  }
+
+  /**
+   * 保存代理凭证信息
+   * 通过调用接口获取代理服务器配置，并自动填充到表单输入框中
+   * @function
+   * @throws {Error} 当网络请求失败、接口返回异常或代理信息不完整时抛出错误
+   * @example
+   * saveProxyCredentials();
+   */
+  function saveProxyCredentials() {
+
+    fetch('https://example.com/agent/proxy/api/query/getProxy', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        areaCode: "henan",
+        platForm: "平台凭证"
+      })
+    })
+      .then(response => {
+        if (!response.ok) throw new Error('网络响应异常');
+        return response.json();
+      })
+      .then(data => {
+        if (data.status !== 0) {
+          throw new Error(data.message || '接口返回异常');
+        }
+
+        // 解析代理信息
+        const { instanceIp, proxyUk, proxyPwd, proxyPort } = data.data;
+
+        // 校验必要字段
+        if (!instanceIp || !proxyPort) {
+          throw new Error('代理信息不完整');
+        }
+
+        // 填充输入框
+        proxyAddressInput.value = `${instanceIp}:${proxyPort}`;
+        usernameInput.value = proxyUk;
+        passwordInput.value = proxyPwd;
+
+        // 自动保存设置
+  /*       enableProxyBtn.click();
+        saveBtn.click(); */
+
+        showToast('代理信息获取成功', 'success');
+      })
+      .catch(error => {
+        console.error('获取代理信息失败:', error);
+        showToast(`获取失败: ${error.message}`, 'error');
+      });
+
   }
 
 
