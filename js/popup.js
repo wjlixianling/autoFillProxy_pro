@@ -309,7 +309,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // 校验必要字段
         if (!instanceIp || !proxyPort) {
-          throw new Error('代理信息不完整');
+          throw new Error('当前没有可用IP代理');
         }
 
         // 填充输入框
@@ -318,8 +318,8 @@ document.addEventListener('DOMContentLoaded', function () {
         passwordInput.value = proxyPwd;
 
         // 自动保存设置
-  /*       enableProxyBtn.click();
-        saveBtn.click(); */
+        /*       enableProxyBtn.click();
+              saveBtn.click(); */
 
         showToast('代理信息获取成功', 'success');
       })
