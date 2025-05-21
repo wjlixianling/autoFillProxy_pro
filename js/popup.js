@@ -15,7 +15,6 @@ document.addEventListener('DOMContentLoaded', function () {
     if (result.proxySettings) {
       // 恢复代理地址输入框
       proxyAddressInput.value = result.proxySettings.address || '';
-      proxyPElements[0].textContent = "代理IP：" + (result.proxySettings.address || '');
 
       // 恢复状态显示
       if (result.proxySettings.enabled) {
@@ -23,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function () {
         proxyPElements[1].classList.add('status-enabled');
         proxyPElements[1].classList.remove('status-disabled');
       } else {
-        proxyPElements[1].textContent = "状态：已禁用";
+        proxyPElements[1].textContent = "状态：已停用";
         proxyPElements[1].classList.add('status-disabled');
         proxyPElements[1].classList.remove('status-enabled');
       }
@@ -119,7 +118,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // 更新代理状态显示
             const proxyPElements = document.getElementById('proxy-content').getElementsByTagName('p');
             proxyPElements[0].textContent = "代理IP：未设置";
-            proxyPElements[1].textContent = "状态：已禁用";
+            proxyPElements[1].textContent = "状态：已停用";
             proxyPElements[1].classList.add('status-disabled');
             proxyPElements[1].classList.remove('status-enabled');
             showMessage('代理已禁用', 'green');
