@@ -24,7 +24,7 @@
   "background": { "service_worker" : "background.js"},
   "action": {
     "default_icon": {              
-      "16": "images/icon17.png"
+      "16": "images/icon2.png"
     },
 	"default_title": "设置身份验证，避免弹框输入",
 	"default_popup": "popup.html"
