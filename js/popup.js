@@ -118,7 +118,7 @@ document.addEventListener('DOMContentLoaded', function () {
           }, function () {
             // 更新代理状态显示
             const proxyPElements = document.getElementById('proxy-content').getElementsByTagName('p');
-            //proxyPElements[0].textContent = "代理IP：未设置";
+            proxyPElements[0].textContent = "代理IP：未设置";
             proxyPElements[1].textContent = "状态：已禁用";
             proxyPElements[1].classList.add('status-disabled');
             proxyPElements[1].classList.remove('status-enabled');
