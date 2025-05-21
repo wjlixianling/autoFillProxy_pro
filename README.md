@@ -20,11 +20,13 @@
 HTTP代理地址配置（支持ip:port格式）
 一键启用/禁用代理
 代理状态持久化存储（使用chrome.storage.local）
+
 2. 认证凭据管理
 
 代理用户名/密码安全存储
 凭据自动填充（通过webRequest.onAuthRequired拦截）
 敏感信息加密存储（Chrome原生存储机制）
+
 3. 智能辅助功能
 
 自动检测代理配置有效性
@@ -32,6 +34,7 @@ HTTP代理地址配置（支持ip:port格式）
 系统权限检测与错误提示
 
 二、技术架构
+
 
  MV3扩展架构
 ├── 核心层（background.js）
@@ -47,24 +50,27 @@ HTTP代理地址配置（支持ip:port格式）
     └── 网络规则集（rules.json）
 
 
-四、核心实现
+三、核心实现
 
 1. 代理管理子系统
 
 地址格式验证（正则表达式校验）
 chrome.proxy.settings API控制
 设置状态同步（localStorage ↔ Chrome运行时）
+
 2. 认证子系统
 
 * 安全凭证存储（隔离存储空间）
 请求拦截模式（asyncBlocking模式）
 JWT自动续期检测（通过Cookie解析）
+
 3. 通信机制
 
 跨组件消息总线（runtime.sendMessage）
 存储变更监听（storage.onChanged）
 错误处理链路（统一错误代码体系）
-五、安全规范
+
+四、安全规范
 
 1. 遵循Chrome扩展安全策略
 
@@ -74,7 +80,7 @@ JWT自动续期检测（通过Cookie解析）
 
 4. 存储数据加密（Chrome原生加密存储）
 
-六、扩展安装
+五、扩展安装
 
 1. Chrome地址栏访问 chrome://extensions
 
