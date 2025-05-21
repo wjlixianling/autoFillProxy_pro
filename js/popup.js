@@ -110,8 +110,7 @@ document.addEventListener('DOMContentLoaded', function () {
         enabled: false  // 仅修改启用状态
       };
 
-      chrome.proxy.settings.set(
-        { value: { mode: 'direct' }, scope: 'regular' },
+      chrome.proxy.settings.clear({},
         function () {
           chrome.storage.local.set({
             proxySettings: newSettings
@@ -122,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function () {
             proxyPElements[1].textContent = "状态：已停用";
             proxyPElements[1].classList.add('status-disabled');
             proxyPElements[1].classList.remove('status-enabled');
-            showMessage('代理已禁用', 'green');
+            showToast('已恢复代理设置到初始状态', 'success');
           });
         }
       );
