@@ -1,6 +1,6 @@
 {
   "name":"代理设置助手",
-  "version":"1.1.0",
+  "version":"1.1.1",
   "description":"隐藏代理设置弹框",
   "permissions":[
     "webRequest",
