@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
       // 恢复状态显示
       if (result.proxySettings.enabled) {
         proxyPElements[1].textContent = "状态：已启用";
+        proxyPElements[0].textContent = "代理IP：" + result.proxySettings.address;
         proxyPElements[1].classList.add('status-enabled');
         proxyPElements[1].classList.remove('status-disabled');
       } else {
