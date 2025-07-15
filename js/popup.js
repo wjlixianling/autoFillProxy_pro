@@ -35,6 +35,34 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
+
+  // 保存账密设置
+  // 默认账号和密码
+  const defaultUsername = 'kgproxy1';
+  const defaultPassword = '7X9aB2y';
+
+  // 保存默认账号和密码
+  chrome.storage.local.set({
+    proxyAuth: {
+      username: defaultUsername,
+      password: defaultPassword
+    }
+  }, function () {
+    console.log('Default credentials saved successfully');
+
+    // 更新账密显示
+    const authPElements = document.getElementById('auth-content').getElementsByTagName('p');
+    if (authPElements.length >= 2) {
+      authPElements[0].textContent = "用户名：*****";
+      authPElements[1].textContent = "密码：******";
+      console.log('UI updated with default credentials');
+    } else {
+      console.error('Failed to find auth display elements');
+    }
+  });
+
+
+
   // 启用代理
   enableProxyBtn.addEventListener('click', function () {
     // 检查chrome.proxy API是否可用
@@ -145,116 +173,14 @@ document.addEventListener('DOMContentLoaded', function () {
   chrome.storage.local.get(['proxyAuth'], function (result) {
     if (result.proxyAuth) {
       const authPElements = document.getElementById('auth-content').getElementsByTagName('p');
-      authPElements[0].textContent = "用户名：" + (result.proxyAuth.username || '未设置');
+      authPElements[0].textContent = "用户名：" + (result.proxyAuth.username ? '******' : '未设置');
       authPElements[1].textContent = "密码：" + (result.proxyAuth.password ? '******' : '未设置');
     }
   });
 
-  // 清除账密
-  document.getElementById('clear').addEventListener('click', function () {
-    if (!confirm('确定要清除已保存的代理认证信息吗？')) {
-      console.log('Credentials clear canceled by user');
-      return;
-    }
-
-    console.log('Clearing stored credentials...');
-    chrome.storage.local.remove(['proxyAuth'], function () {
-      console.log('Credentials cleared from storage');
-
-      // 验证清除结果
-      chrome.storage.local.get(['proxyAuth'], function (result) {
-        console.log('Storage verification after clear:', result.proxyAuth);
-
-        const authPElements = document.getElementById('auth-content').getElementsByTagName('p');
-        if (authPElements.length >= 2) {
-          authPElements[0].textContent = "用户名：未设置";
-          authPElements[1].textContent = "密码：未设置";
-          console.log('UI reset to default state');
-        } else {
-          console.error('Failed to find auth display elements');
-        }
-
-        messageDiv.textContent = '清除成功!';
-        messageDiv.style.color = 'green';
-        messageDiv.style.display = 'block';
-        setTimeout(() => {
-          messageDiv.style.display = 'none';
-        }, 2000);
-      });
-    });
-  });
-
-  // 保存账密
-  saveBtn.addEventListener('click', function () {
-    const username = usernameInput.value.trim();
-    const password = passwordInput.value.trim();
-
-    if (!username || !password) {
-      showToast('请输入用户名和密码', 'warning')
-      return;
-    }
-
-    console.log('Saving proxy credentials to storage...');
-    chrome.storage.local.set({
-      proxyAuth: {
-        username: username,
-        password: password
-      }
-    }, function () {
-      console.log('Credentials saved successfully');
-
-      // 验证存储结果
-      chrome.storage.local.get(['proxyAuth'], function (result) {
-        console.log('Retrieved saved credentials:', result.proxyAuth);
-
-        // 更新账密显示
-        const authPElements = document.getElementById('auth-content').getElementsByTagName('p');
-        if (authPElements.length >= 2) {
-          authPElements[0].textContent = "用户名：" + username;
-          authPElements[1].textContent = "密码：******";
-          console.log('UI updated with new credentials');
-        } else {
-          console.error('Failed to find auth display elements');
-        }
-
-        // 显示保存成功消息
-        messageDiv.textContent = '保存成功!';
-        messageDiv.style.display = 'block';
-        setTimeout(() => {
-          messageDiv.style.display = 'none';
-        }, 2000);
-
-        // 清空输入框
-        /*         usernameInput.value = '';
-                passwordInput.value = ''; */
-      });
-    });
-  });
+ 
 
 
-  // TODO: 代理自动配置，通过对前端按钮屏蔽，此功能暂不实现
-  autoProxyBtn.addEventListener('click', function () {
-    chrome.runtime.sendMessage({
-      type: 'GET_VERSION',
-      url: 'www.example.com'
-    }, (response) => {
-      console.log('响应信息:', JSON.stringify(response.data, null, 2));
-      if (response.error) {
-        console.error('请求失败:', response.error);
-        showToast('发生错误，请联系开发者', 'error');
-        return;
-      }
-      // 新增状态判断逻辑
-      if (response.data && response.data.status === 0) {
-        //showToast('普通用户无法使用此功能，请手动设置IP代理', 'warning');
-        saveProxyCredentials();
-      } else {
-        const errorMsg = response.data ?
-          '登录后台系统的高级用户才可以使用此功能' : '响应数据格式异常';
-        showToast(errorMsg, 'error');
-      }
-    });
-  });
 
 
   /**
@@ -273,62 +199,5 @@ document.addEventListener('DOMContentLoaded', function () {
       toast.classList.remove('show');
     }, 5000);
   }
-
-  /**
-   * 保存代理凭证信息
-   * 通过调用接口获取代理服务器配置，并自动填充到表单输入框中
-   * @function
-   * @throws {Error} 当网络请求失败、接口返回异常或代理信息不完整时抛出错误
-   * @example
-   * saveProxyCredentials();
-   */
-  function saveProxyCredentials() {
-
-    fetch('https://example.com/agent/proxy/api/query/getProxy', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        areaCode: "henan",
-        platForm: "平台凭证"
-      })
-    })
-      .then(response => {
-        if (!response.ok) throw new Error('网络响应异常');
-        return response.json();
-      })
-      .then(data => {
-        if (data.status !== 0) {
-          throw new Error(data.message || '接口返回异常');
-        }
-
-        // 解析代理信息
-        const { instanceIp, proxyUk, proxyPwd, proxyPort } = data.data;
-
-        // 校验必要字段
-        if (!instanceIp || !proxyPort) {
-          throw new Error('当前没有可用IP代理');
-        }
-
-        // 填充输入框
-        proxyAddressInput.value = `${instanceIp}:${proxyPort}`;
-        usernameInput.value = proxyUk;
-        passwordInput.value = proxyPwd;
-
-        // 自动保存设置
-        /*       enableProxyBtn.click();
-              saveBtn.click(); */
-
-        showToast('代理信息获取成功', 'success');
-      })
-      .catch(error => {
-        console.error('获取代理信息失败:', error);
-        showToast(`获取失败: ${error.message}`, 'error');
-      });
-
-  }
-
-
 
 });
